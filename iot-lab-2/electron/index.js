@@ -2,7 +2,7 @@ document.onkeydown = updateKey;
 document.onkeyup = resetKey;
 
 var server_port = 65432;
-var server_addr = "192.168.3.49";   // the IP address of your Raspberry PI
+var server_addr = "192.168.10.14";   // the IP address of your Raspberry PI
 
 function client(){
     
@@ -18,8 +18,9 @@ function client(){
     
     // get the data from the server
     client.on('data', (data) => {
-        document.getElementById("bluetooth").innerHTML = data;
-        console.log(data.toString());
+        document.getElementById("bluetooth").innerHTML = tostring(data);
+        document.getElementById("speed").innerHTML = tostring(data.length);
+        console.log(data);
         client.end();
         client.destroy();
     });
@@ -55,7 +56,32 @@ function updateKey(e) {
         // right (d)
         document.getElementById("rightArrow").style.color = "green";
         send_data("68");
+    } else {
+        send_data("1");
     }
+}
+
+function send_data(s) {
+    const net = require('net');    
+   
+    const client = net.createConnection({ port: server_port, host: server_addr }, () => {
+        // 'connect' listener.
+        console.log('connected to server!');
+        // send the message
+        client.write(`${s}\r\n`);
+    });
+    
+    // get the data from the server
+    client.on('data', (data) => {
+        document.getElementById("bluetooth").innerHTML = data;
+        
+        client.end();
+        client.destroy();
+    });
+
+    client.on('end', () => {
+        console.log('disconnected from server');
+    });
 }
 
 // reset the key to the start state 
