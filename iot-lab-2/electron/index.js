@@ -76,7 +76,6 @@ function send_data(s) {
         const bluetoothData = data.toString();
         const [speed, temp, dist] = bluetoothData.split(',');
         
-        // document.getElementById("bluetooth").innerHTML = bluetoothData;
         document.getElementById("speed").innerHTML = speed;
         document.getElementById("temperature").innerHTML = temp;
         document.getElementById("distance").innerHTML = dist;
